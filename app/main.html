@@ -1,1 +1,53 @@
-{{hello}}
+<div class="container">
+	<div class="cat-title" ng-click="c.toggleStats('expense')">Expense</div>
+	<div ng-if="c.toggleExpense">
+		<table class="u-full-width">
+		  <thead>
+		    <tr>
+		      <th>Name</th>
+		      <th>Count</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr ng-repeat="e in c.expense">
+		      <td>{{e.name}}</td>
+		      <td>{{e.count}}</td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
+	<div class="cat-title" ng-click="c.toggleStats('free')">Free</div>
+	<div ng-if="c.toggleFree">
+		<table class="u-full-width">
+		  <thead>
+		    <tr>
+		      <th>Name</th>
+		      <th>Count</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr ng-repeat="f in c.free">
+		      <td>{{f.name}}</td>
+		      <td>{{f.count}}</td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
+	<div class="cat-title" ng-click="c.toggleStats('attendence')">Attendence</div>
+	<div ng-if="c.toggleAttendence">
+		<table class="u-full-width">
+		  <thead>
+		    <tr>
+		      <th>Name</th>
+		      <th>Count</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr ng-repeat="a in c.attendence">
+		      <td>{{a.name}}</td>
+		      <td>{{a.count}}</td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
+</div>

@@ -4,13 +4,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Cosmotle</title>
 </head>
-<body ng-app="cosmotle">
+<body ng-app="cosmotle" style="margin:0">
 	<script type="text/javascript" src="/node_modules/angular/angular.min.js"></script>
 	<script type="text/javascript" src="/node_modules/angular-route/angular-route.min.js"></script>
 	<script type="text/javascript" src="/app/app.js"></script>
-
+	
+	<!-- <link rel="stylesheet" type="text/css" href="/app/normalize.css"> -->
+	<link rel="stylesheet" type="text/css" href="/app/skeleton.css">
 	<link rel="stylesheet" type="text/css" href="/app/cosmotle.css">
-	<div class="container" ng-view>
+	<div class="header row u-full-width">
+	<img class="u-pull-left logo" src="app/cosmonauts.png">
+	<img ng-click="c.add()" class="u-pull-right add-icon" src="app/tortilla-yellow.svg">
+	<h2 class="title">Cosmotle</h1>
+
+</div>
+	<div ng-view>
 	</div>
 </body>
 </html>
