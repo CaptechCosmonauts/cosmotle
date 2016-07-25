@@ -34,10 +34,21 @@
   margin-bottom: 2px;
 }
 
+.total-credit{
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
 .button-green{
 	background-color: #3ece3e !important;
   color: white !important;
   border-color: #3ece3e !important
+}
+
+.button-red{
+	background-color: #ce3e3e !important;
+  color: white !important;
+  border-color: #ce3e3e !important
 }
 
 select{

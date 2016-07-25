@@ -27,13 +27,13 @@
 		
 	}])
 
-	app.controller('CosmotleCtrl', ['cosmotleData', '$location', function(cosmotleData, $location){
+	app.controller('CosmotleCtrl', ['cosmotleData', '$location', 'CosmotleServices', function(cosmotleData, $location, CosmotleServices){
 		var c = this;
 
 		c.free = cosmotleData[0].data;
 		c.expense = cosmotleData[1].data;
 		c.attendence = cosmotleData[2].data;
-		c.totalCount;
+		c.totalCount = CosmotleServices.getTotalCredit();
 
 		c.toggleFree = false;
 		c.toggleExpense = true;
@@ -63,33 +63,39 @@
 		var g = this;
 
 		g.user;
-		g.creditType;
 
-		g.back = function(type){
-			console.log('User: '+ g.user + ' Type: '+ type);
+		g.creditUser = function(type){
 			CosmotleServices.postCosmotleStats(g.user, type);
+			g.back();
+		}
+
+		g.back = function(){
+			g.user = '';
 			$location.path('/');
 		}
 	}])
 
 	app.factory('CosmotleServices', ['$http', '$q', function($http, $q){
 
-		var holdStats;
+		var freeData, expenseData, attendenceData;
 		return {
 			getCosmotleStats: getCosmotleStats,
-			postCosmotleStats: postCosmotleStats
+			postCosmotleStats: postCosmotleStats,
+			getTotalCredit: getTotalCredit
 		}
 
 		function getCosmotleStats(){
-			var free, expense, attendence, defer;
+			var freeReq, expenseReq, attendenceReq, defer; 
 
 			defer = $q.defer();
-			free = $http.get('/cosmostats/free');
-			expense = $http.get('/cosmostats/expense');
-			attendence = $http.get('/cosmostats/attendence');
+			freeReq = $http.get('/cosmostats/free');
+			expenseReq = $http.get('/cosmostats/expense');
+			attendenceReq = $http.get('/cosmostats/attendence');
 
-			$q.all([free,expense,attendence]).then(function (response) {
-				holdStats = response;
+			$q.all([freeReq,expenseReq,attendenceReq]).then(function (response) {
+				freeData = response[0].data;
+				expenseData = response[1].data;
+				attendenceData = response[2].data;
 				defer.resolve(response);
 			});
 
@@ -97,22 +103,19 @@
 		}
 
 		function postCosmotleStats(name, type){
-			var freeObj, expenseObj, attendenceObj, sendId;
 
 			if(type === 'free'){
-				_sendObj(type, name, holdStats[0].data);
-				_sendObj('attendence', name, holdStats[2].data);
+				_sendObj(type, name, freeData);
+				_sendObj('attendence', name, attendenceData);
 
 			}
 			else if(type === 'expense'){
-				_sendObj(type, name, holdStats[1].data);
-				_sendObj('attendence', name, holdStats[2].data);
+				_sendObj(type, name, expenseData);
+				_sendObj('attendence', name, attendenceData);
 			}
 			else if(type === 'attendence'){
-				_sendObj(type, name, holdStats[2].data);
+				_sendObj(type, name, attendenceData);
 			}
-
-
 
 			function _sendObj(type, name, obj){
 				var sendObj = {
@@ -131,6 +134,21 @@
 				}
 			}
 			
+		}
+
+		function getTotalCredit(){
+
+			return (_countCredit(freeData) + _countCredit(expenseData)).toString();
+
+			function _countCredit(obj){
+				var counter = 0;
+				for(var i=0; i< obj.length; i++){
+					counter = counter + Number(obj[i].count);
+				}
+
+				return counter;
+			}
+
 		}
 		
 	}]);
