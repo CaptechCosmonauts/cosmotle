@@ -63,10 +63,18 @@
 		var g = this;
 
 		g.user;
+		g.showError = false;
 
 		g.creditUser = function(type){
-			CosmotleServices.postCosmotleStats(g.user, type);
-			g.back();
+			g.showError = false;
+			CosmotleServices.postCosmotleStats(g.user, type).then(
+				function(res){
+					g.back();
+				},
+				function(err){
+					g.showError = true;
+				}
+			);
 		}
 
 		g.back = function(){
@@ -103,18 +111,28 @@
 		}
 
 		function postCosmotleStats(name, type){
-
+			var defer = $q.defer();
 			if(type === 'free'){
-				_sendObj(type, name, freeData);
+				_sendObj(type, name, freeData).then(_success(), _failure());
 				_sendObj('attendence', name, attendenceData);
 
 			}
 			else if(type === 'expense'){
-				_sendObj(type, name, expenseData);
+				_sendObj(type, name, expenseData).then(_success(), _failure());
 				_sendObj('attendence', name, attendenceData);
 			}
 			else if(type === 'attendence'){
-				_sendObj(type, name, attendenceData);
+				_sendObj(type, name, attendenceData).then(_success(), _failure());
+			}
+
+			return defer.promise
+
+			function _success(){
+				defer.resolve(true);
+			}
+
+			function _failure(){
+				defer.reject(false);
 			}
 
 			function _sendObj(type, name, obj){
@@ -129,7 +147,7 @@
 					if(obj[i].name === name){
 						sendObj._id.$oid = obj[i]._id.$oid;
 						sendObj.count = (Number(obj[i].count)+1).toString();
-						$http.put('/cosmostats/'+type+'/'+obj[i]._id.$oid, sendObj);
+						return $http.put('/cosmostats/'+type+'/'+obj[i]._id.$oid, sendObj);
 					}
 				}
 			}
