@@ -39,13 +39,13 @@
 		
 	}])
 
-	app.controller('CosmotleCtrl', ['cosmotleData', '$location', function(cosmotleData, $location){
+	app.controller('CosmotleCtrl', ['cosmotleData', '$location', 'CosmotleServices', function(cosmotleData, $location, CosmotleServices){
 		var c = this;
 
 		c.free = cosmotleData[0].data;
 		c.expense = cosmotleData[1].data;
 		c.attendence = cosmotleData[2].data;
-		c.totalCount;
+		c.totalCount = CosmotleServices.getTotalCredit();
 
 		c.toggleFree = false;
 		c.toggleExpense = true;
@@ -124,39 +124,51 @@
 		var g = this;
 
 		g.user;
-		g.creditType;
+		g.showError = false;
 
-		g.back = function(type){
-			console.log('User: '+ g.user + ' Type: '+ type);
-			CosmotleServices.postCosmotleStats(g.user, type);
+		g.creditUser = function(type){
+			g.showError = false;
+			CosmotleServices.postCosmotleStats(g.user, type).then(
+				function(res){
+					g.back();
+				},
+				function(err){
+					g.showError = true;
+				}
+			);
+		}
+
+		g.back = function(){
+			g.user = '';
 			$location.path('/');
 		}
 	}])
 
 	app.factory('CosmotleServices', ['$http', '$q', function($http, $q){
 
-		var holdStats;
+		var freeData, expenseData, attendenceData;
 		return {
 			getCosmotleStats: getCosmotleStats,
 			postCosmotleStats: postCosmotleStats,
 			getCosmotleCalendar: getCosmotleCalendar,
 			postCosmotleCalendar: postCosmotleCalendar,
 			putCosmotleCalendar: putCosmotleCalendar,
-			deleteCosmotleCalendar: deleteCosmotleCalendar
+			deleteCosmotleCalendar: deleteCosmotleCalendar,
+			getTotalCredit: getTotalCredit
 		}
 
 		function getCosmotleStats(){
-			var free, expense, attendence, defer;
+			var freeReq, expenseReq, attendenceReq, defer;
 
 			defer = $q.defer();
-			console.log("calling free");
-			free = $http.get('/free');
-			console.log("done calling free");
-			expense = $http.get('/expense');
-			attendence = $http.get('/attendence');
+			freeReq = $http.get('/cosmostats/free');
+			expenseReq = $http.get('/cosmostats/expense');
+			attendenceReq = $http.get('/cosmostats/attendence');
 
-			$q.all([free,expense,attendence]).then(function (response) {
-				holdStats = response;
+			$q.all([freeReq,expenseReq,attendenceReq]).then(function (response) {
+				freeData = response[0].data;
+				expenseData = response[1].data;
+				attendenceData = response[2].data;
 				defer.resolve(response);
 			});
 
@@ -173,7 +185,7 @@
 
 
 			$q.all([calendar]).then(function (response) {
-				holdStats = response;
+				//holdStats = response;
 				defer.resolve(response);
 			});
 
@@ -181,22 +193,29 @@
 		}
 
 		function postCosmotleStats(name, type){
-			var freeObj, expenseObj, attendenceObj, sendId;
-
+			var defer = $q.defer();
 			if(type === 'free'){
-				_sendObj(type, name, holdStats[0].data);
-				_sendObj('attendence', name, holdStats[2].data);
+				_sendObj(type, name, freeData).then(_success(), _failure());
+				_sendObj('attendence', name, attendenceData);
 
 			}
 			else if(type === 'expense'){
-				_sendObj(type, name, holdStats[1].data);
-				_sendObj('attendence', name, holdStats[2].data);
+				_sendObj(type, name, expenseData).then(_success(), _failure());
+				_sendObj('attendence', name, attendenceData);
 			}
 			else if(type === 'attendence'){
-				_sendObj(type, name, holdStats[2].data);
+				_sendObj(type, name, attendenceData).then(_success(), _failure());
 			}
 
+			return defer.promise
 
+			function _success(){
+				defer.resolve(true);
+			}
+
+			function _failure(){
+				defer.reject(false);
+			}
 
 			function _sendObj(type, name, obj){
 				var sendObj = {
@@ -210,11 +229,26 @@
 					if(obj[i].name === name){
 						sendObj._id.$oid = obj[i]._id.$oid;
 						sendObj.count = (Number(obj[i].count)+1).toString();
-						$http.put('/'+type+'/'+obj[i]._id.$oid, sendObj);
+						return $http.put('/cosmostats/'+type+'/'+obj[i]._id.$oid, sendObj);
 					}
 				}
 			}
 			
+		}
+
+		function getTotalCredit(){
+
+			return (_countCredit(freeData) + _countCredit(expenseData)).toString();
+
+			function _countCredit(obj){
+				var counter = 0;
+				for(var i=0; i< obj.length; i++){
+					counter = counter + Number(obj[i].count);
+				}
+
+				return counter;
+			}
+
 		}
 
 		function postCosmotleCalendar(name, date){
@@ -258,7 +292,7 @@
 
 
 		}
-		
+
 	}]);
 
 })();

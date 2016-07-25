@@ -17,9 +17,9 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 });
 
-app.get('/free', function(req, res){
+app.get('/cosmostats/:type', function(req, res){
 	var resData;
-	var url = 'https://api.mongolab.com/api/1/databases/heroku_lphx2t8m/collections/free?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2';
+	var url = 'https://api.mongolab.com/api/1/databases/heroku_lphx2t8m/collections/'+req.params.type+'?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2';
 	
 	res.type('json');
 	https.get(url, function(response){
@@ -38,54 +38,12 @@ app.get('/free', function(req, res){
 	});
 });
 
-app.get('/expense', function(req, res){
-	var resData;
-	var url = 'https://api.mongolab.com/api/1/databases/heroku_lphx2t8m/collections/expense?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2';
-	
-	res.type('json');
-	https.get(url, function(response){
-		console.log('GET COSMOTLE STATUS'+ response.statusCode)
-		response.on('data', function(data){
-			if(!resData){
-				resData = data;
-			}
-			else{
-				resData += data;
-			}
-		});
-		response.on('end',function(){
-			res.send(resData);
-		});
-	});
-});
-
-app.get('/attendence', function(req, res){
-	var resData;
-	var url = 'https://api.mongolab.com/api/1/databases/heroku_lphx2t8m/collections/attendence?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2';
-	
-	res.type('json');
-	https.get(url, function(response){
-		console.log('GET COSMOTLE STATUS'+ response.statusCode)
-		response.on('data', function(data){
-			if(!resData){
-				resData = data;
-			}
-			else{
-				resData += data;
-			}
-		});
-		response.on('end',function(){
-			res.send(resData);
-		});
-	});
-});
-
-app.put('/free/:id', function(req, res){
+app.put('/cosmostats/:type/:id', function(req, res){
 	var resData;
 	var post_data = JSON.stringify(req.body);
 	var postOptions = {
 		host: 'api.mongolab.com',
-		path: '/api/1/databases/heroku_lphx2t8m/collections/free/'+req.params.id+'?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2',
+		path: '/api/1/databases/heroku_lphx2t8m/collections/'+req.params.type+'/'+req.params.id+'?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2',
 		method: 'PUT',
 		headers: {
 		  'Content-Type': 'application/json'
@@ -113,71 +71,6 @@ app.put('/free/:id', function(req, res){
 	request.end();
 });
 
-app.put('/expense/:id', function(req, res){
-	var resData;
-	var post_data = JSON.stringify(req.body);
-	var postOptions = {
-		host: 'api.mongolab.com',
-		path: '/api/1/databases/heroku_lphx2t8m/collections/expense/'+req.params.id+'?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2',
-		method: 'PUT',
-		headers: {
-		  'Content-Type': 'application/json'
-		}
-	}
-
-	var request = https.request(postOptions, function(response){
-		response.on('data', function(data){
-			console.log('PUT Cosmotle STATUS: '+ response.statusCode);
-			if(!resData){
-				resData = data;
-			}
-			else{
-				resData += data;
-			}
-		});
-		response.on('end', function(){
-		    res.send(resData);
-		});
-	});
-	request.on('error', function(e){
-		console.log('problem with request: ' +e.message);
-	});
-	request.write(post_data);
-	request.end();
-});
-
-app.put('/attendence/:id', function(req, res){
-	var resData;
-	var post_data = JSON.stringify(req.body);
-	var postOptions = {
-		host: 'api.mongolab.com',
-		path: '/api/1/databases/heroku_lphx2t8m/collections/attendence/'+req.params.id+'?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2',
-		method: 'PUT',
-		headers: {
-		  'Content-Type': 'application/json'
-		}
-	}
-
-	var request = https.request(postOptions, function(response){
-		response.on('data', function(data){
-			console.log('PUT Cosmotle STATUS: '+ response.statusCode);
-			if(!resData){
-				resData = data;
-			}
-			else{
-				resData += data;
-			}
-		});
-		response.on('end', function(){
-		    res.send(resData);
-		});
-	});
-	request.on('error', function(e){
-		console.log('problem with request: ' +e.message);
-	});
-	request.write(post_data);
-	request.end();
-});
 
 app.get('/calendar', function(req, res){
 

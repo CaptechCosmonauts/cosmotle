@@ -46,10 +46,42 @@
   margin-bottom: 2px;
 }
 
+.total-credit{
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
 .button-green{
 	background-color: #3ece3e !important;
   color: white !important;
   border-color: #3ece3e !important
+}
+
+.button-red{
+	background-color: #ce3e3e !important;
+  color: white !important;
+  border-color: #ce3e3e !important
+}
+.error-header{
+  color: red;
+  background-color: black;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 5px;
+  height: 30px;
+}
+.error{
+  border: 1px solid black;
+  color: red;
+  line-height: 1.2;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #efefef;
+}
+.error-icon{
+	height: 20px;
+	width: 20px;
+	margin: 5px
 }
 
 select{
