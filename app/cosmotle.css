@@ -25,6 +25,18 @@
 	padding-top: 20px;
 }
 
+
+.calendar input{
+	width: 50%;
+	text-align: center;
+}
+.calendar label{
+	width: 50%;
+	text-align: center;
+}
+
+
+
 .cat-title{
 	font-size: 20px;
   border: 1px solid #585151;

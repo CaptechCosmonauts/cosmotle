@@ -1,0 +1,57 @@
+<div class="header row u-full-width">
+    <img class="u-pull-left logo" src="app/cosmonauts.png">
+    <h1 class="title">Cosmotle Event Creator</h1>
+</div>
+
+<div class="container calendar">
+    <form ng-if="cal.new">
+        <div class="row">
+
+                <label for="user">Who Are You?</label>
+                <input id="user" ng-model="cal.name">
+
+        </div>
+        <div class="row">
+
+                <label for="date">When are you going to Chipotle MM/DD format</label>
+                <input id="date" ng-model="cal.date">
+
+        </div>
+        <input ng-click="cal.submit()" class="button-green u-full-width" type="button" value="Submit">
+    </form>
+
+
+    <form ng-if="cal.update">
+        <div class="row">
+
+            <label for="eventId">Event Id</label>
+            <input id="EventId" ng-model="cal.updateId">
+
+        </div>
+
+        <div class="row">
+
+            <label for="updateUser">Who Are You?</label>
+            <input id="updateUser" ng-model="cal.name">
+
+        </div>
+        <div class="row">
+
+            <label for="updateDate">When are you going to Chipotle MM/DD format</label>
+            <input id="updateDate" ng-model="cal.date">
+
+        </div>
+        <input ng-click="cal.updateEvent()" class="button-green u-full-width" type="button" value="Update">
+    </form>
+
+
+    <ul>
+        <li ng-repeat="event in cal.calendar">{{event.name}} {{event.date}} <a ng-click="cal.showUpdate(event._id.$oid, event.name, event.date)">Update Event</a> <a ng-click="cal.deleteEvent(event._id.$oid, event.name, event.date)">Delete Event</a></li>
+    </ul>
+
+
+
+
+
+
+</div>

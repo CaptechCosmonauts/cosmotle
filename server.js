@@ -178,3 +178,132 @@ app.put('/attendence/:id', function(req, res){
 	request.write(post_data);
 	request.end();
 });
+
+app.get('/calendar', function(req, res){
+
+	var resData;
+	var url = 'https://api.mongolab.com/api/1/databases/heroku_lphx2t8m/collections/events?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2';
+
+	res.type('json');
+	https.get(url, function(response){
+		console.log('GET COSMOTLE CALENDAR STATUS'+ response.statusCode)
+		response.on('data', function(data){
+			if(!resData){
+				resData = data;
+			}
+			else{
+				resData += data;
+			}
+		});
+		response.on('end',function(){
+			res.send(resData);
+		});
+	});
+
+});
+
+app.put('/calendar/:id', function(req, res){
+
+	var resData;
+	var post_data = JSON.stringify(req.body);
+	var postOptions = {
+		host: 'api.mongolab.com',
+		path: '/api/1/databases/heroku_lphx2t8m/collections/events/'+req.params.id+'?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2',
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	}
+
+	var request = https.request(postOptions, function(response){
+		response.on('data', function(data){
+			console.log('PUT CALENDAR STATUS: '+ response.statusCode);
+			if(!resData){
+				resData = data;
+			}
+			else{
+				resData += data;
+			}
+		});
+		response.on('end', function(){
+			res.send(resData);
+		});
+	});
+	request.on('error', function(e){
+		console.log('problem with request: ' +e.message);
+	});
+	request.write(post_data);
+	request.end();
+
+});
+
+app.post('/calendar/', function(req, res){
+
+	var resData;
+	var post_data = JSON.stringify(req.body);
+	var postOptions = {
+		host: 'api.mongolab.com',
+		path: '/api/1/databases/heroku_lphx2t8m/collections/events/?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	}
+
+	var request = https.request(postOptions, function(response){
+		response.on('data', function(data){
+			console.log('PUT CALENDAR STATUS: '+ response.statusCode);
+			if(!resData){
+				resData = data;
+			}
+			else{
+				resData += data;
+			}
+		});
+		response.on('end', function(){
+			res.send(resData);
+		});
+	});
+	request.on('error', function(e){
+		console.log('problem with request: ' +e.message);
+	});
+	request.write(post_data);
+	request.end();
+
+});
+
+app.delete('/calendar/:id', function(req, res){
+
+	var resData;
+	var post_data = JSON.stringify(req.body);
+	var postOptions = {
+		host: 'api.mongolab.com',
+		path: '/api/1/databases/heroku_lphx2t8m/collections/events/'+req.params.id+'?apiKey=NgGXg3kUA9V4eh_fWe-ponEZCk7EINv2',
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	}
+
+	var request = https.request(postOptions, function(response){
+		response.on('data', function(data){
+			console.log('DELETE CALENDAR STATUS: '+ response.statusCode);
+			if(!resData){
+				resData = data;
+			}
+			else{
+				resData += data;
+			}
+		});
+		response.on('end', function(){
+			res.send(resData);
+		});
+	});
+	request.on('error', function(e){
+		console.log('problem with request: ' +e.message);
+	});
+	request.write(post_data);
+	request.end();
+
+});
+
