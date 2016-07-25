@@ -5,6 +5,12 @@
 
 	app.config(['$routeProvider',function($routeProvider) {
 
+		var cosmotleWelcome = {
+			templateUrl: 'app/welcome.html',
+			controller: 'WelcomeCtrl',
+			controllerAs: 'w'
+		}
+
 		var cosmotleMain = {
 			templateUrl: 'app/main.html',
 			controller: 'CosmotleCtrl',
@@ -23,9 +29,24 @@
 		}
 
 		$routeProvider.when('/getcredit', getCredit);
-		$routeProvider.otherwise(cosmotleMain)
+
+		$routeProvider.when('/main', cosmotleMain);
+		$routeProvider.otherwise(cosmotleWelcome);
 		
 	}])
+
+	app.controller('WelcomeCtrl', ['CosmotleServices', function(CosmotleServices){
+		var w = this;
+
+		w.knownUser = false;
+		w.user;
+
+		w.setCookie = function(){
+			//set cookie
+		}
+
+
+	}]);
 
 	app.controller('CosmotleCtrl', ['cosmotleData', '$location', 'CosmotleServices', function(cosmotleData, $location, CosmotleServices){
 		var c = this;

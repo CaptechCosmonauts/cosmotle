@@ -1,0 +1,27 @@
+<div class="welcome u-full-width">
+	<div class="u-full-width" style="text-align: center">
+		<img class="welcome-image" src="app/cosmonauts.png">
+	</div>
+	<div class="welcome-message" ng-if="!w.knownUser">
+		Welcome!
+	</div>
+	<div class="container">
+    <div class="twelve columns">
+      <label for="user">Who Are You?</label>
+      <select ng-model="w.user" class="u-full-width" id="user">
+      	<option value="">Select User</option>
+        <option value="John">John</option>
+        <option value="Kim">Kim</option>
+        <option value="Dave">Dave</option>
+        <option value="Nahom">Nahom</option>
+        <option value="Matt">Matt</option>
+        <option value="Jairo">Jairo</option>
+        <option value="Peter">Peter</option>
+      </select>
+    </div>
+  </div>
+	
+	<div class="welcome-message" ng-if="w.knownUser">
+		Welcome, {{w.user}}!
+	</div>
+</div>
