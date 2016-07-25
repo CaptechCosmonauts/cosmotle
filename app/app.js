@@ -84,9 +84,9 @@
 			var free, expense, attendence, defer;
 
 			defer = $q.defer();
-			free = $http.get('/free');
-			expense = $http.get('/expense');
-			attendence = $http.get('/attendence');
+			free = $http.get('/cosmostats/free');
+			expense = $http.get('/cosmostats/expense');
+			attendence = $http.get('/cosmostats/attendence');
 
 			$q.all([free,expense,attendence]).then(function (response) {
 				holdStats = response;
@@ -126,7 +126,7 @@
 					if(obj[i].name === name){
 						sendObj._id.$oid = obj[i]._id.$oid;
 						sendObj.count = (Number(obj[i].count)+1).toString();
-						$http.put('/'+type+'/'+obj[i]._id.$oid, sendObj);
+						$http.put('/cosmostats/'+type+'/'+obj[i]._id.$oid, sendObj);
 					}
 				}
 			}
