@@ -1,5 +1,5 @@
 <div class="header row u-full-width">
-	<img class="u-pull-left logo" src="app/styles/cosmonauts.png">
+	<img class="u-pull-left logo" src="app/styles/cosmonauts.jpeg">
 	<img ng-click="c.add()" class="u-pull-right add-icon" src="app/styles/tortilla-yellow.svg">
 	<h1 class="title">Cosmotle</h1>
 </div>
@@ -55,25 +55,6 @@
 		  </tbody>
 		</table>
 	</div>
-	<div class="cat-title" ng-click="c.toggleStats('attendence')">Attendence</div>
-	<div ng-if="c.toggleAttendence">
-		<table class="u-full-width">
-		  <thead>
-		    <tr>
-		      <th>Name</th>
-		      <th>Count</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr ng-repeat="a in c.attendence">
-		      <td>{{a.name}}</td>
-		      <td>{{a.count}}</td>
-		    </tr>
-		  </tbody>
-		</table>
-	</div>
-
-
 	<div class="cat-title">Upcoming Duty Days</div>
 	<a href="/#/calendar">Add An Event!</a>
 	<ul>

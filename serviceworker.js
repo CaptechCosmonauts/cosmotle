@@ -1,10 +1,10 @@
 this.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open('cosmotleCacheV1').then(function(cache) {
+    caches.open('cosmotleCacheV2').then(function(cache) {
       return cache.addAll([
         '/',  
         '/index.html',
-        '/app/styles/cosmonauts.png',
+        '/app/styles/cosmonauts.jpeg',
         '/app/styles/cosmotle.css',
         '/app/styles/error-triangle.svg',
         '/app/styles/tortilla-yellow.svg',
