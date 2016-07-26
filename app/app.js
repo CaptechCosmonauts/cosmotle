@@ -340,7 +340,7 @@
 var initializeServiceWorker = function(){
 
 	if ('serviceWorker' in navigator) {
-	  navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' }).then(function(reg) {
+	  navigator.serviceWorker.register('/serviceworker.js', { scope: '/' }).then(function(reg) {
 	    if(reg.installing) {
 	      console.log('Service worker installing');
 	    } else if(reg.waiting) {
