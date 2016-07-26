@@ -1,9 +1,15 @@
 (function(){
 	'use strict';
 
-	var app = angular.module('cosmotle', ['ngRoute']);
+	var app = angular.module('cosmotle', ['ngRoute', 'ngCookies']);
 
 	app.config(['$routeProvider',function($routeProvider) {
+
+		var cosmotleWelcome = {
+			templateUrl: 'app/welcome.html',
+			controller: 'WelcomeCtrl',
+			controllerAs: 'w'
+		}
 
 		var cosmotleMain = {
 			templateUrl: 'app/main.html',
@@ -37,9 +43,29 @@
 
 		$routeProvider.when('/getcredit', getCredit);
 		$routeProvider.when('/calendar', cosmotleCalendar);
-		$routeProvider.otherwise(cosmotleMain)
+		$routeProvider.when('/main', cosmotleMain);
+		$routeProvider.when('/', cosmotleWelcome);
 		
 	}])
+
+	app.controller('WelcomeCtrl', ['CosmotleServices','$location', function(CosmotleServices, $location){
+		var w = this;
+
+		w.knownUser = CosmotleServices.isUserKnown();
+		w.user;
+
+		if(w.knownUser){
+			w.user = CosmotleServices.getUserFromCookie();
+			$location.path('/main');
+		}
+
+		w.selectUser = function(){
+			CosmotleServices.setUserCookie(w.user);
+			$location.path('/main');
+		}
+
+
+	}]);
 
 	app.controller('CosmotleCtrl', ['cosmotleData', 'calendarData', '$location', 'CosmotleServices', function(cosmotleData, calendarData, $location, CosmotleServices){
 		var c = this;
@@ -131,6 +157,9 @@
 		var g = this;
 
 		g.user;
+		if(CosmotleServices.isUserKnown()){
+			g.user = CosmotleServices.getUserFromCookie();
+		}
 		g.showError = false;
 
 		g.creditUser = function(type){
@@ -147,21 +176,24 @@
 
 		g.back = function(){
 			g.user = '';
-			$location.path('/');
+			$location.path('/main');
 		}
 	}])
 
-	app.factory('CosmotleServices', ['$http', '$q', function($http, $q){
+	app.factory('CosmotleServices', ['$http', '$q', '$cookies', function($http, $q, $cookies){
 
 		var freeData, expenseData, attendenceData;
 		return {
 			getCosmotleStats: getCosmotleStats,
 			postCosmotleStats: postCosmotleStats,
+			getTotalCredit: getTotalCredit,
+			getUserFromCookie: getUserFromCookie,
+			setUserCookie: setUserCookie,
+			isUserKnown: isUserKnown,
 			getCosmotleCalendar: getCosmotleCalendar,
 			postCosmotleCalendar: postCosmotleCalendar,
 			putCosmotleCalendar: putCosmotleCalendar,
-			deleteCosmotleCalendar: deleteCosmotleCalendar,
-			getTotalCredit: getTotalCredit
+			deleteCosmotleCalendar: deleteCosmotleCalendar
 		}
 
 		function getCosmotleStats(){
@@ -236,7 +268,6 @@
 					}
 				}
 			}
-			
 		}
 
 		function getTotalCredit(){
@@ -251,7 +282,25 @@
 
 				return counter;
 			}
+		}
 
+		function setUserCookie(user){
+			$cookies.put('user', user);
+		}
+
+		function getUserFromCookie(){
+			return $cookies.get('user');
+		}
+
+		function isUserKnown(){
+			var userCookie = getUserFromCookie();
+			var isKnown = false;
+
+			if(userCookie){
+				isKnown = true;
+			}
+
+			return isKnown;
 		}
 
 		function postCosmotleCalendar(name, month, date){
@@ -295,8 +344,6 @@
 
 
 			$http.delete('/calendar/' + id, sendObj);
-
-
 		}
 
 	}]);
