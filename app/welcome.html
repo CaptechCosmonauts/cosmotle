@@ -5,10 +5,10 @@
 	<div class="welcome-message" ng-if="!w.knownUser">
 		Welcome!
 	</div>
-	<div class="container">
+	<div class="container" ng-if="!w.knownUser">
     <div class="twelve columns">
       <label for="user">Who Are You?</label>
-      <select ng-model="w.user" class="u-full-width" id="user">
+      <select ng-model="w.user" class="u-full-width" ng-change="w.selectUser()" id="user">
       	<option value="">Select User</option>
         <option value="John">John</option>
         <option value="Kim">Kim</option>

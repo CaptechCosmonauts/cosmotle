@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 
-	var app = angular.module('cosmotle', ['ngRoute']);
+	var app = angular.module('cosmotle', ['ngRoute', 'ngCookies']);
 
 	app.config(['$routeProvider',function($routeProvider) {
 
@@ -35,14 +35,20 @@
 		
 	}])
 
-	app.controller('WelcomeCtrl', ['CosmotleServices', function(CosmotleServices){
+	app.controller('WelcomeCtrl', ['CosmotleServices','$location', function(CosmotleServices, $location){
 		var w = this;
-
-		w.knownUser = false;
+	
+		w.knownUser = CosmotleServices.isUserKnown();		
 		w.user;
 
-		w.setCookie = function(){
-			//set cookie
+		if(w.knownUser){
+			w.user = CosmotleServices.getUserFromCookie();
+			$location.path('/main');
+		}
+
+		w.selectUser = function(){
+			CosmotleServices.setUserCookie(w.user);
+			$location.path('/main');
 		}
 
 
@@ -84,6 +90,9 @@
 		var g = this;
 
 		g.user;
+		if(CosmotleServices.isUserKnown()){
+			g.user = CosmotleServices.getUserFromCookie();
+		}
 		g.showError = false;
 
 		g.creditUser = function(type){
@@ -100,17 +109,20 @@
 
 		g.back = function(){
 			g.user = '';
-			$location.path('/');
+			$location.path('/main');
 		}
 	}])
 
-	app.factory('CosmotleServices', ['$http', '$q', function($http, $q){
+	app.factory('CosmotleServices', ['$http', '$q', '$cookies', function($http, $q, $cookies){
 
 		var freeData, expenseData, attendenceData;
 		return {
 			getCosmotleStats: getCosmotleStats,
 			postCosmotleStats: postCosmotleStats,
-			getTotalCredit: getTotalCredit
+			getTotalCredit: getTotalCredit,
+			getUserFromCookie: getUserFromCookie,
+			setUserCookie: setUserCookie,
+			isUserKnown: isUserKnown
 		}
 
 		function getCosmotleStats(){
@@ -172,7 +184,6 @@
 					}
 				}
 			}
-			
 		}
 
 		function getTotalCredit(){
@@ -187,9 +198,28 @@
 
 				return counter;
 			}
-
 		}
 		
+
+		function setUserCookie(user){
+			$cookies.put('user', user);
+		}
+
+		function getUserFromCookie(){
+			return $cookies.get('user');
+		}
+
+		function isUserKnown(){
+			var userCookie = getUserFromCookie();
+			var isKnown = false;
+
+			if(userCookie){
+				isKnown = true;
+			}
+
+			return isKnown;
+		}
+
 	}]);
 
 })();
