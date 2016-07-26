@@ -107,7 +107,11 @@
 
 	app.controller('CalendarCtrl', ['cosmotleData', '$location', 'CosmotleServices', function(cosmotleData, $location, CosmotleServices){
 		var c = this;
-		c.name = "";
+		c.user;
+		if(CosmotleServices.isUserKnown()){
+			c.user = CosmotleServices.getUserFromCookie();
+		}
+		c.name = c.user;
         c.month = "";
 		c.date = "";
 		c.update = false;
@@ -119,13 +123,13 @@
 		c.submit = function(){
 			console.log(c.name +  " " + c.date);
 			CosmotleServices.postCosmotleCalendar(c.name, c.month, c.date);
-			$location.path('/calendar');
+			window.location.reload(true);
 		};
 
 		c.updateEvent = function(){
 			console.log(c.name +  " " + c.date);
 			CosmotleServices.putCosmotleCalendar(c.name, c.month, c.date, c.updateId);
-			$location.path('/calendar');
+			window.location.reload(true);
 		};
 
 		c.showUpdate = function(id, name, month, date){
@@ -145,7 +149,7 @@
 			console.log("deleting event in controller");
 			console.log(c.name +  " " + c.date);
 			CosmotleServices.deleteCosmotleCalendar(c.name, c.month, c.date, c.updateId);
-			$location.path('/calendar');
+			window.location.reload(true);
 		};
 
 

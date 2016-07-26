@@ -6,9 +6,9 @@
 <div class="container calendar">
     <form ng-if="cal.new">
         <div class="row">
-
-                <label for="user">Who Are You?</label>
-            <select ng-model="cal.name" class="u-full-width" id="user">
+            <div class="six columns">
+            <label class="twelve columns" for="user">Who Are You?</label>
+            <select class="twelve columns" ng-model="cal.name" class="u-full-width" id="user">
                 <option value="">Select User</option>
                 <option value="John">John</option>
                 <option value="Kim">Kim</option>
@@ -18,20 +18,25 @@
                 <option value="Jairo">Jairo</option>
                 <option value="Peter">Peter</option>
             </select>
+            </div>
 
         </div>
         <div class="row">
 
-            <label>When are you going to Chipotle?</label>
+            <div class="six columns">
+            <label class="twelve columns" >When are you going to Chipotle?</label>
 
-            <label for="month">Month</label>
-            <select class="month" ng-model="cal.month" id="month">
+            <div class=".u-pull-left">
+            <label class="six columns " for="month">Month</label>
+            <select class="six columns" ng-model="cal.month" id="month">
                 <option value="07">July</option>
                 <option value="08">August</option>
                 <option value="09">September</option>
             </select>
-            <label for="date" >Date</label>
-            <select class="date" ng-model="cal.date" id="date">
+            </div>
+            <div class=".u-pull-right">
+            <label class="six columns" for="date" >Date</label>
+            <select class="six columns" ng-model="cal.date" id="date">
                 <option value="01">1</option>
                 <option value="02">2</option>
                 <option value="03">3</option>
@@ -64,48 +69,57 @@
                 <option value="30">30</option>
                 <option value="31">31</option>
             </select>
-
+            </div>
+            </div>
         </div>
-        <input ng-click="cal.submit()" class="button-green u-full-width" type="button" value="Submit">
+        <div class="row">
+            <input ng-click="cal.submit()" class="button-green six columns" type="button" value="Submit">
+        </div>
     </form>
 
 
     <form ng-if="cal.update">
         <div class="row">
-
-            <label for="eventId">Event Id</label>
-            <input id="EventId" ng-model="cal.updateId">
-
+            <div class="six columns">
+            <label class="twelve columns" for="eventId">Event Id</label>
+            <input class="twelve columns" id="EventId" ng-model="cal.updateId">
+        </div>
         </div>
 
         <div class="row">
-
-            <label for="updateUser">Who Are You?</label>
-            <select ng-model="cal.name" class="u-full-width" id="updateUser">
-                <option value="">Select User</option>
-                <option value="John">John</option>
-                <option value="Kim">Kim</option>
-                <option value="Dave">Dave</option>
-                <option value="Nahom">Nahom</option>
-                <option value="Matt">Matt</option>
-                <option value="Jairo">Jairo</option>
-                <option value="Peter">Peter</option>
-            </select>
+            <div class="six columns">
+                <label class="twelve columns" for="updateUser">Who Are You?</label>
+                <select class="twelve columns" ng-model="cal.name" class="u-full-width" id="updateUser">
+                    <option value="">Select User</option>
+                    <option value="John">John</option>
+                    <option value="Kim">Kim</option>
+                    <option value="Dave">Dave</option>
+                    <option value="Nahom">Nahom</option>
+                    <option value="Matt">Matt</option>
+                    <option value="Jairo">Jairo</option>
+                    <option value="Peter">Peter</option>
+                </select>
+            </div>
 
         </div>
         <div class="row">
+            <div class="six columns">
 
-            <label>When are you going to Chipotle?</label>
-            <!--<input id="updateDate" ng-model="cal.date">-->
+                <label class="twelve columns" >When are you going to Chipotle?</label>
 
-            <label for="updateMonth">Month</label>
-            <select class="month" ng-model="cal.month" id="updateMonth">
+                <div class=".u-pull-left">
+
+            <label class="six columns " for="updateMonth">Month</label>
+            <select class="six columns " ng-model="cal.month" id="updateMonth">
                 <option value="07">July</option>
                 <option value="08">August</option>
                 <option value="09">September</option>
             </select>
-            <label or="updateDate" >Date</label>
-            <select class="date" ng-model="cal.date" id="updateDate">
+                </div>
+
+                <div class=".u-pull-right">
+            <label class="six columns" for="updateDate" >Date</label>
+            <select class="six columns" ng-model="cal.date" id="updateDate">
                 <option value="01">1</option>
                 <option value="02">2</option>
                 <option value="03">3</option>
@@ -138,12 +152,14 @@
                 <option value="30">30</option>
                 <option value="31">31</option>
             </select>
-
-
+            </div>
+            </div>
 
 
         </div>
-        <input ng-click="cal.updateEvent()" class="button-green u-full-width" type="button" value="Update">
+        <div class=".u-pull-right">
+            <input ng-click="cal.updateEvent()" class="button-green six columns" type="button" value="Update">
+        </div>
     </form>
 
 
