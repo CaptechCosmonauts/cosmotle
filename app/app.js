@@ -70,6 +70,11 @@
 	app.controller('CosmotleCtrl', ['cosmotleData', 'calendarData', '$location', 'CosmotleServices', function(cosmotleData, calendarData, $location, CosmotleServices){
 		var c = this;
 
+		//send user to welcome screen if we don't know them
+		if(!CosmotleServices.isUserKnown){
+			$location.path('/');
+		}
+
     c.unorganizedCalendar = calendarData[0].data;
     c.calendar = organizeCalendar(calendarData[0].data);
 
