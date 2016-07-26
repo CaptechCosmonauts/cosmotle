@@ -25,13 +25,36 @@
 	padding-top: 20px;
 }
 
+.container .calendar table{
+	width: 100%;
+}
 
-.calendar input{
-	width: 50%;
+.container .calendar table td{
+	border: 1px solid black;
+	width: 20%;
+}
+.container .calendar table td p{
+	width: 100%;
+	float: right;
+	text-align: right;
+}
+.container .calendar table td div{
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+}
+
+
+.calendar select{
+	width: 30%;
 	text-align: center;
 }
 .calendar label{
-	width: 50%;
+	width: 30%;
+	text-align: center;
+}
+.calendar input{
+	width: 30%;
 	text-align: center;
 }
 

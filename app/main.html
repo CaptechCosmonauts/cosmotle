@@ -1,12 +1,21 @@
 <div class="header row u-full-width">
 	<img class="u-pull-left logo" src="app/cosmonauts.png">
 	<img ng-click="c.add()" class="u-pull-right add-icon" src="app/tortilla-yellow.svg">
+	<a href="/#/calendar">Add An Event!</a>
 	<h2 class="title">Cosmotle</h1>
 </div>
 <div class="container">
 	<div class='total-credit'>
 		Total Credit: {{c.totalCount}}
 	</div>
+	<div class="calendar" id="calendar">
+		<table class="calendarGrid">
+			<tr>
+				<td ng-repeat="event in c.calendar"><p>{{event.date}}</p><div ng-if="event.name != ''">{{event.name}}</div></td>
+			</tr>
+		</table>
+	</div>
+
 	<div class="cat-title" ng-click="c.toggleStats('expense')">Expense</div>
 	<div ng-if="c.toggleExpense">
 		<table class="u-full-width">
@@ -58,4 +67,11 @@
 		  </tbody>
 		</table>
 	</div>
+
+
+	<div class="cat-title">Upcoming Duty Days</div>
+	<ul>
+		<li ng-repeat="event in c.unorganizedCalendar">{{event.name}} {{event.month}}/{{event.date}} </li>
+	</ul>
+
 </div>
