@@ -1,7 +1,6 @@
 <div class="header row u-full-width">
 	<img class="u-pull-left logo" src="app/styles/cosmonauts.png">
 	<img ng-click="c.add()" class="u-pull-right add-icon" src="app/styles/tortilla-yellow.svg">
-	<a href="/#/calendar">Add An Event!</a>
 	<h1 class="title">Cosmotle</h1>
 </div>
 <div class="container">
@@ -10,8 +9,14 @@
 	</div>
 	<div class="calendar" id="calendar">
 		<table class="calendarGrid">
+
 			<tr>
-				<td ng-repeat="event in c.calendar"><p>{{event.date}}</p><div ng-if="event.name != ''">{{event.name}}</div></td>
+				<td class="header" ng-repeat="event in c.calendar"><p>{{event.date}}</p></td>
+
+			</tr>
+			<tr>
+				<td ng-repeat="event in c.calendar"><div>{{event.name}}</div></td>
+
 			</tr>
 		</table>
 	</div>
@@ -51,6 +56,7 @@
 		</table>
 	</div>
 	<div class="cat-title">Upcoming Duty Days</div>
+	<a href="/#/calendar">Add An Event!</a>
 	<ul>
 		<li ng-repeat="event in c.unorganizedCalendar">{{event.name}} {{event.month}}/{{event.date}} </li>
 	</ul>

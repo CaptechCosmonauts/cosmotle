@@ -365,20 +365,20 @@ function getCalendarDateRange(){
 
     var x = 0;
     for(var x = 0; x < range.length; x++){
-        arrayHold[x] = {"date":range[x],"name":"","month":""};
+        arrayHold[x] = {"date":range[x],"name":" ","month":""};
     }
 
     while(variance.dateBackward != 0){
-        range[x] = {"date":dateToday.getDate() - variance.dateBackward,"name":"","month":""};
+        range[x] = {"date":dateToday.getDate() - variance.dateBackward,"name":" ","month":""};
         variance.dateBackward--;
         x++;
     }
 
-    range[x] =  {"date":dateToday.getDate(),"name":"","month":""};
+    range[x] =  {"date":dateToday.getDate(),"name":" ","month":""};
     x++;
     var dateClimb = 1;
     while(variance.dateForward != 0){
-        range[x] ={"date":dateToday.getDate() + dateClimb,"name":"","month":""};
+        range[x] ={"date":dateToday.getDate() + dateClimb,"name":" ","month":""};
         dateClimb++;
         variance.dateForward--;
         x++

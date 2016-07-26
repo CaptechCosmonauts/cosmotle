@@ -29,19 +29,34 @@
 	width: 100%;
 }
 
-.container .calendar table td{
-	border: 1px solid black;
+.container .calendar table .header{
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-top: 1px solid black;
+	border-right: 1px solid black;
+	border-left: 1px solid black;
+	border-bottom: 1px solid black;
 	width: 20%;
 }
 .container .calendar table td p{
-	width: 100%;
-	float: right;
+	color:white;
+	border: 1px solid black;
+	height: 50%;
+	padding-right: 15px;
+	background-color: #585151;
+	width: 80%;
 	text-align: right;
+	margin: 0px;
 }
-.container .calendar table td div{
-	width: 100%;
+.container .calendar table td{
+	height: 50%;
+	width: 20%;
 	text-align: center;
 	font-weight: bold;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+	border-left: 1px solid black;
 }
 
 
