@@ -19,9 +19,9 @@
 				cosmotleData: ['CosmotleServices', function(CosmotleServices){
 					return CosmotleServices.getCosmotleStats();
 				}],
-                calendarData: ['CosmotleServices', function(CosmotleServices){
-                    return CosmotleServices.getCosmotleCalendar();
-                }]
+        calendarData: ['CosmotleServices', function(CosmotleServices){
+            return CosmotleServices.getCosmotleCalendar();
+        }]
 			}
 		}
 		var cosmotleCalendar = {
@@ -70,19 +70,17 @@
 	app.controller('CosmotleCtrl', ['cosmotleData', 'calendarData', '$location', 'CosmotleServices', function(cosmotleData, calendarData, $location, CosmotleServices){
 		var c = this;
 
-        c.unorganizedCalendar = calendarData[0].data;
-        c.calendar = organizeCalendar(calendarData[0].data);
+    c.unorganizedCalendar = calendarData[0].data;
+    c.calendar = organizeCalendar(calendarData[0].data);
 
-        console.log(c.calendar);
+    console.log(c.calendar);
 
 		c.free = cosmotleData[0].data;
 		c.expense = cosmotleData[1].data;
-		c.attendence = cosmotleData[2].data;
 		c.totalCount = CosmotleServices.getTotalCredit();
 
 		c.toggleFree = false;
-		c.toggleExpense = true;
-		c.toggleAttendence = false;
+		c.toggleExpense = false;
 
 		c.title = "Cosmotle";
 
@@ -92,9 +90,6 @@
 			}
 			else if(type === 'free'){
 				c.toggleFree = (c.toggleFree === true) ? false : true;
-			}
-			else if(type === 'attendence'){
-				c.toggleAttendence = (c.toggleAttendence === true) ? false : true;
 			}
 		};
 
@@ -182,7 +177,7 @@
 
 	app.factory('CosmotleServices', ['$http', '$q', '$cookies', function($http, $q, $cookies){
 
-		var freeData, expenseData, attendenceData;
+		var freeData, expenseData;
 		return {
 			getCosmotleStats: getCosmotleStats,
 			postCosmotleStats: postCosmotleStats,
@@ -197,17 +192,15 @@
 		}
 
 		function getCosmotleStats(){
-			var freeReq, expenseReq, attendenceReq, defer;
+			var freeReq, expenseReq, defer;
 
 			defer = $q.defer();
 			freeReq = $http.get('/cosmostats/free');
 			expenseReq = $http.get('/cosmostats/expense');
-			attendenceReq = $http.get('/cosmostats/attendence');
 
-			$q.all([freeReq,expenseReq,attendenceReq]).then(function (response) {
+			$q.all([freeReq,expenseReq]).then(function (response) {
 				freeData = response[0].data;
 				expenseData = response[1].data;
-				attendenceData = response[2].data;
 				defer.resolve(response);
 			});
 
@@ -231,15 +224,9 @@
 			var defer = $q.defer();
 			if(type === 'free'){
 				_sendObj(type, name, freeData).then(_success(), _failure());
-				_sendObj('attendence', name, attendenceData);
-
 			}
 			else if(type === 'expense'){
 				_sendObj(type, name, expenseData).then(_success(), _failure());
-				_sendObj('attendence', name, attendenceData);
-			}
-			else if(type === 'attendence'){
-				_sendObj(type, name, attendenceData).then(_success(), _failure());
 			}
 
 			return defer.promise

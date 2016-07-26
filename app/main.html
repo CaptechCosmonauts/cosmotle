@@ -50,25 +50,6 @@
 		  </tbody>
 		</table>
 	</div>
-	<div class="cat-title" ng-click="c.toggleStats('attendence')">Attendence</div>
-	<div ng-if="c.toggleAttendence">
-		<table class="u-full-width">
-		  <thead>
-		    <tr>
-		      <th>Name</th>
-		      <th>Count</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr ng-repeat="a in c.attendence">
-		      <td>{{a.name}}</td>
-		      <td>{{a.count}}</td>
-		    </tr>
-		  </tbody>
-		</table>
-	</div>
-
-
 	<div class="cat-title">Upcoming Duty Days</div>
 	<ul>
 		<li ng-repeat="event in c.unorganizedCalendar">{{event.name}} {{event.month}}/{{event.date}} </li>
