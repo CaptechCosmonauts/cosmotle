@@ -86,6 +86,7 @@
 
 		c.toggleFree = false;
 		c.toggleExpense = false;
+		c.toggleUpcomingEvents = false;
 
 		c.title = "Cosmotle";
 
@@ -95,6 +96,9 @@
 			}
 			else if(type === 'free'){
 				c.toggleFree = (c.toggleFree === true) ? false : true;
+			}
+			else if(type === 'events'){
+				c.toggleUpcomingEvents = (c.toggleUpcomingEvents === true) ? false : true;
 			}
 		};
 

@@ -55,10 +55,22 @@
 		  </tbody>
 		</table>
 	</div>
-	<div class="cat-title">Upcoming Duty Days</div>
-	<a href="/#/calendar">Add An Event!</a>
-	<ul>
-		<li ng-repeat="event in c.unorganizedCalendar">{{event.name}} {{event.month}}/{{event.date}} </li>
-	</ul>
-
+	<div class="cat-title" ng-click="c.toggleStats('events')">Upcoming Duty Days</div>
+	<div ng-if="c.toggleUpcomingEvents">
+		<a class="u-pull-right" href="/#/calendar">Add An Event!</a>
+		<table class="u-full-width">
+			<thead>
+		    <tr>
+		      <th>Name</th>
+		      <th>Date</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr ng-repeat="event in c.unorganizedCalendar">
+		      <td>{{event.name}}</td>
+		      <td>{{event.month}}/{{event.date}}</td>
+		    </tr>
+		  </tbody>
+		</table>
+	</div>
 </div>
