@@ -78,8 +78,6 @@
     c.unorganizedCalendar = calendarData[0].data;
     c.calendar = organizeCalendar(calendarData[0].data);
 
-    console.log(c.calendar);
-
 		c.free = cosmotleData[0].data;
 		c.expense = cosmotleData[1].data;
 		c.totalCount = CosmotleServices.getTotalCredit();
@@ -115,8 +113,9 @@
 		if(CosmotleServices.isUserKnown()){
 			c.user = CosmotleServices.getUserFromCookie();
 		}
+		
 		c.name = c.user;
-        c.month = "";
+    c.month = "";
 		c.date = "";
 		c.update = false;
 		c.new = true;
@@ -131,7 +130,6 @@
 		};
 
 		c.updateEvent = function(){
-			console.log(c.name +  " " + c.date);
 			CosmotleServices.putCosmotleCalendar(c.name, c.month, c.date, c.updateId);
 			window.location.reload(true);
 		};
@@ -150,11 +148,13 @@
             c.month = month;
 			c.date = date;
 			c.updateId = id;
-			console.log("deleting event in controller");
-			console.log(c.name +  " " + c.date);
 			CosmotleServices.deleteCosmotleCalendar(c.name, c.month, c.date, c.updateId);
 			window.location.reload(true);
 		};
+
+		c.back = function(){
+			$location.path('/main')
+		}
 
 
 	}]);

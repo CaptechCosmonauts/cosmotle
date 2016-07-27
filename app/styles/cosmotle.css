@@ -23,6 +23,7 @@
 
 .container{
 	padding-top: 20px;
+	max-width: 560px;
 }
 
 .container .calendar table{
@@ -54,8 +55,26 @@
 	border-left: 1px solid black;
 }
 
+.cal-month{
+	width: 50%;
+}
 
-.calendar select{
+.cal-month select{
+	padding: 0px 5px;
+}
+
+.cal-date{
+	width: 40%;
+}
+
+.cal-date select{
+	padding: 0px 5px;
+}
+
+.cal-btn{
+	width: 48%;
+}
+/*.calendar select{
 	text-align: center;
 }
 .calendar label{
@@ -63,7 +82,7 @@
 }
 .calendar input{
 	text-align: center;
-}
+}*/
 
 
 
