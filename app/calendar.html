@@ -91,7 +91,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="event in cal.calendar">
+        <tr ng-repeat="event in cal.calendar | orderBy:['-month','-date']">
           <td>{{event.name}}</td>
           <td>{{event.month}}/{{event.date}}</td>
           <td><img class="event-img" src="app/styles/refresh.svg" ng-click="cal.showUpdate(event)" ></td>

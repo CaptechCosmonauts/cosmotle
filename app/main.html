@@ -66,7 +66,7 @@
 		    </tr>
 		  </thead>
 		  <tbody>
-		    <tr ng-repeat="event in c.unorganizedCalendar">
+		    <tr ng-repeat="event in c.unorganizedCalendar | orderBy:['month','date']">
 		      <td>{{event.name}}</td>
 		      <td>{{event.month}}/{{event.date}}</td>
 		    </tr>
