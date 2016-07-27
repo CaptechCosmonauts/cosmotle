@@ -29,7 +29,7 @@
 			controller: 'CalendarCtrl',
 			controllerAs: 'cal',
 			resolve: {
-				cosmotleData: ['CosmotleServices', function(CosmotleServices){
+				calendarData: ['CosmotleServices', function(CosmotleServices){
 					return CosmotleServices.getCosmotleCalendar();
 				}]
 			}
@@ -112,59 +112,56 @@
 	}]);
 
 
-	app.controller('CalendarCtrl', ['cosmotleData', '$location', 'CosmotleServices', function(cosmotleData, $location, CosmotleServices){
+	app.controller('CalendarCtrl', ['calendarData', '$location', 'CosmotleServices', function(calendarData, $location, CosmotleServices){
 		var c = this;
 		c.user;
 		if(CosmotleServices.isUserKnown()){
 			c.user = CosmotleServices.getUserFromCookie();
 		}
 
-		c.name = c.user;
-    c.month = "";
-		c.date = "";
-		c.update = false;
+		c.calendar = calendarData[0].data;
+		c.event = {
+			_id: {
+				$oid: ''
+			},
+			name: c.user,
+			month: '',
+			date: ''
+		}
 		c.new = true;
-		c.updateId = "";
 
 		c.routeHome = function(){
 			$location.path('/');
 		}
 
-		
-
-		c.calendar = cosmotleData[0].data;
-		
-
 		c.submit = function(){
-			CosmotleServices.postCosmotleCalendar(c.name, c.month, c.date);
-			window.location.reload(true);
+			CosmotleServices.postCosmotleCalendar(_createAddEventForPost());
+			c.calendar.unshift(c.event);
+			_clearEvent();
 		};
 
 		c.updateEvent = function(){
-			CosmotleServices.putCosmotleCalendar(c.name, c.month, c.date, c.updateId);
-			window.location.reload(true);
+			CosmotleServices.putCosmotleCalendar(event);
+			_clearEvent();
 		};
 
-		c.showUpdate = function(id, name, month, date){
-			c.name = name;
-            c.month = month;
-			c.date = date;
-			c.updateId = id;
-			c.update = true;
+		c.showUpdate = function(event){
+			c.event = event;
 			c.new = false;
 		};
 
-		c.deleteEvent = function(id, name, month, date){
-			c.name = name;
-            c.month = month;
-			c.date = date;
-			c.updateId = id;
-			CosmotleServices.deleteCosmotleCalendar(c.name, c.month, c.date, c.updateId);
-			window.location.reload(true);
+		c.deleteEvent = function(index, event){
+			CosmotleServices.deleteCosmotleCalendar(event);
+			c.calendar.splice(index, 1);
 		};
 
 		c.back = function(){
 			$location.path('/main')
+		}
+
+		c.backToAdd = function(){
+			c.new = true;
+			_clearEvent();
 		}
 
 		if(CosmotleServices.eventForUpdate !={}){
@@ -179,6 +176,26 @@
 			}
 		}
 
+		var _clearEvent = function(){
+			c.event = {
+				_id: {
+					$oid: ''
+				},
+				name: c.user,
+				month: '',
+				date: ''
+			}
+		}
+
+		//mLab doesn't like _id.$oid on an object for POST
+		var _createAddEventForPost = function(){
+			var addObj = {
+				name: c.event.name,
+				month: c.event.month,
+				date: c.event.date
+			}
+			return addObj;
+		}
 
 	}]);
 
@@ -327,46 +344,16 @@
 			return isKnown;
 		}
 
-		function postCosmotleCalendar(name, month, date){
-
-			var sendObj = {
-				name: name,
-                month: month,
-				date: date
-			}
-
-			$http.post('/calendar/', sendObj);
-
+		function postCosmotleCalendar(event){
+			$http.post('/calendar/', event);
 		}
 
-		function putCosmotleCalendar(name, month, date, id){
-			var sendObj = {
-				_id:{
-					$oid: id
-				},
-				name: name,
-                month: month,
-				date: date
-			}
-
-
-			$http.put('/calendar/' + id, sendObj);
-
-
+		function putCosmotleCalendar(event){
+			$http.put('/calendar/' + event._id.$oid, event);
 		}
 
-		function deleteCosmotleCalendar(name, month, date, id){
-			var sendObj = {
-				_id:{
-					$oid: id
-				},
-				name: name,
-                month: month,
-				date: date
-			}
-
-
-			$http.delete('/calendar/' + id, sendObj);
+		function deleteCosmotleCalendar(event){
+			$http.delete('/calendar/' + event._id.$oid, event);
 		}
 
 	}]);
