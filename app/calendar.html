@@ -1,6 +1,6 @@
 <div class="header row u-full-width">
-    <img class="u-pull-left logo" src="app/styles/cosmonauts.jpeg">
-    <h1 class="title">Cosmotle</h1>
+    <img class="u-pull-left logo" ng-click="cal.routeHome()" src="app/styles/cosmonauts.jpeg">
+    <h1 class="title" ng-click="cal.routeHome()">Cosmotle</h1>
 </div>
 
 <div class="container calendar">
@@ -162,11 +162,36 @@
         </div>
     </form>
 
+    <div></div>
 
-    <ul>
+    <div ng-if="cal.calendar.length > 0">
+        <table class="six columns">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Update</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="event in cal.calendar">
+              <td>{{event.name}}</td>
+              <td>{{event.month}}/{{event.date}}</td>
+              <td><a ng-click="cal.showUpdate(event._id.$oid, event.name, event.month, event.date)">Update Event</a></td>
+              <td><a ng-click="cal.deleteEvent(event._id.$oid, event.name, event.month, event.date)">Delete Event</a></td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+
+
+
+   <!--  <ul>
         <li ng-repeat="event in cal.calendar">{{event.name}} {{event.month}}/{{event.date}} <a ng-click="cal.showUpdate(event._id.$oid, event.name, event.month, event.date)">Update Event</a> <a ng-click="cal.deleteEvent(event._id.$oid, event.name, event.month, event.date)">Delete Event</a></li>
     </ul>
-
+ -->
 
 
 

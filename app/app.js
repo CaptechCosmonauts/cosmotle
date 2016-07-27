@@ -75,10 +75,15 @@
 			$location.path('/');
 		}
 
-    c.unorganizedCalendar = calendarData[0].data;
-    c.calendar = organizeCalendar(calendarData[0].data);
+    	c.unorganizedCalendar = calendarData[0].data;
+    	c.calendar = organizeCalendar(calendarData[0].data);
 
-    console.log(c.calendar);
+    	c.editEvent = function(event){
+    		console.log("Editing eventID: " + event);
+    		CosmotleServices.eventForUpdate = event;
+    		console.log("Services eventID: " + CosmotleServices.eventForUpdate);
+			$location.path('/calendar');
+    	}
 
 		c.free = cosmotleData[0].data;
 		c.expense = cosmotleData[1].data;
@@ -115,6 +120,7 @@
 		if(CosmotleServices.isUserKnown()){
 			c.user = CosmotleServices.getUserFromCookie();
 		}
+
 		c.name = c.user;
         c.month = "";
 		c.date = "";
@@ -122,16 +128,21 @@
 		c.new = true;
 		c.updateId = "";
 
+		c.routeHome = function(){
+			$location.path('/');
+		}
+
+		
+
 		c.calendar = cosmotleData[0].data;
+		
 
 		c.submit = function(){
-			console.log(c.name +  " " + c.date);
 			CosmotleServices.postCosmotleCalendar(c.name, c.month, c.date);
 			window.location.reload(true);
 		};
 
 		c.updateEvent = function(){
-			console.log(c.name +  " " + c.date);
 			CosmotleServices.putCosmotleCalendar(c.name, c.month, c.date, c.updateId);
 			window.location.reload(true);
 		};
@@ -150,11 +161,24 @@
             c.month = month;
 			c.date = date;
 			c.updateId = id;
-			console.log("deleting event in controller");
-			console.log(c.name +  " " + c.date);
 			CosmotleServices.deleteCosmotleCalendar(c.name, c.month, c.date, c.updateId);
 			window.location.reload(true);
 		};
+
+		console.log("Services eventID in calendar: " + CosmotleServices.eventForUpdate);
+
+		if(CosmotleServices.eventForUpdate !={}){
+			var eventForUpdate = CosmotleServices.eventForUpdate;
+			for(var x = 0; x < c.calendar.length; x++){
+				var event = c.calendar[x];
+				//console.log("comparing eventID in calendar: " + CosmotleServices.eventIdForUpdate + " " + event._id.$oid);
+				//console.log(event._id.$oid.trim() ==c.updateId.trim());
+				if((eventForUpdate.name == event.name) && (eventForUpdate.date == event.date) && (eventForUpdate.month == event.month)){
+					c.showUpdate(event._id.$oid, event.name, event.month, event.date);
+					break;
+				}
+			}
+		}
 
 
 	}]);
@@ -201,7 +225,8 @@
 			getCosmotleCalendar: getCosmotleCalendar,
 			postCosmotleCalendar: postCosmotleCalendar,
 			putCosmotleCalendar: putCosmotleCalendar,
-			deleteCosmotleCalendar: deleteCosmotleCalendar
+			deleteCosmotleCalendar: deleteCosmotleCalendar,
+			eventForUpdate: {}
 		}
 
 		function getCosmotleStats(){
