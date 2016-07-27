@@ -75,8 +75,13 @@
 			$location.path('/');
 		}
 
-    c.unorganizedCalendar = calendarData[0].data;
-    c.calendar = organizeCalendar(calendarData[0].data);
+  	c.unorganizedCalendar = calendarData[0].data;
+  	c.calendar = organizeCalendar(calendarData[0].data);
+
+    c.editEvent = function(event){
+  		CosmotleServices.eventForUpdate = event;
+			$location.path('/calendar');
+  	}
 
 		c.free = cosmotleData[0].data;
 		c.expense = cosmotleData[1].data;
@@ -113,7 +118,7 @@
 		if(CosmotleServices.isUserKnown()){
 			c.user = CosmotleServices.getUserFromCookie();
 		}
-		
+
 		c.name = c.user;
     c.month = "";
 		c.date = "";
@@ -121,10 +126,16 @@
 		c.new = true;
 		c.updateId = "";
 
+		c.routeHome = function(){
+			$location.path('/');
+		}
+
+		
+
 		c.calendar = cosmotleData[0].data;
+		
 
 		c.submit = function(){
-			console.log(c.name +  " " + c.date);
 			CosmotleServices.postCosmotleCalendar(c.name, c.month, c.date);
 			window.location.reload(true);
 		};
@@ -154,6 +165,18 @@
 
 		c.back = function(){
 			$location.path('/main')
+		}
+
+		if(CosmotleServices.eventForUpdate !={}){
+			var eventForUpdate = CosmotleServices.eventForUpdate;
+			for(var x = 0; x < c.calendar.length; x++){
+				var event = c.calendar[x];
+
+				if((eventForUpdate.name == event.name) && (eventForUpdate.date == event.date) && (eventForUpdate.month == event.month)){
+					c.showUpdate(event._id.$oid, event.name, event.month, event.date);
+					break;
+				}
+			}
 		}
 
 
@@ -201,7 +224,8 @@
 			getCosmotleCalendar: getCosmotleCalendar,
 			postCosmotleCalendar: postCosmotleCalendar,
 			putCosmotleCalendar: putCosmotleCalendar,
-			deleteCosmotleCalendar: deleteCosmotleCalendar
+			deleteCosmotleCalendar: deleteCosmotleCalendar,
+			eventForUpdate: {}
 		}
 
 		function getCosmotleStats(){
@@ -332,7 +356,6 @@
 		}
 
 		function deleteCosmotleCalendar(name, month, date, id){
-			console.log("deleteing ID" + id);
 			var sendObj = {
 				_id:{
 					$oid: id
@@ -404,18 +427,13 @@ function getCalendarDateRange(){
 function organizeCalendar(calendarArray){
 
     var range = getCalendarDateRange();
-
-    console.log(calendarArray);
     var dateToday = new Date();
-    console.log(dateToday.getDay());
-
     var variance = calculateDateVariance();
-
     var returned = [];
-
     var count = 0;
+
     for(var x = 0; x < calendarArray.length; x++){
-        var event = calendarArray[0];
+        var event = calendarArray[x];
         if((event.month == (dateToday.getMonth() +1)) && ((dateToday.getDate() - variance.dateBackward) < event.date < (dateToday.getDate() + variance.dateForward))){
             returned[count] = event;
             count++;

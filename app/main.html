@@ -15,7 +15,7 @@
 
 			</tr>
 			<tr>
-				<td ng-repeat="event in c.calendar"><div>{{event.name}}</div></td>
+				<td ng-repeat="event in c.calendar" ng-click="c.editEvent(event)"><div>{{event.name}}</div></td>
 
 			</tr>
 		</table>

@@ -74,6 +74,11 @@
 .cal-btn{
 	width: 48%;
 }
+
+.event-img{
+	width: 40px;
+	height: 40px;
+}
 /*.calendar select{
 	text-align: center;
 }
@@ -83,8 +88,6 @@
 .calendar input{
 	text-align: center;
 }*/
-
-
 
 .cat-title{
 	font-size: 20px;
