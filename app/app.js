@@ -110,7 +110,7 @@
 		}
 
 		c.routeToCalendar = function(){
-			CosmotleServices.eventForUpdate = {};
+			CosmotleServices.eventForUpdate = undefined;
 			$location.path('/calendar');
 		}
 
@@ -169,10 +169,10 @@
 			_clearEvent();
 		}
 
-		if(CosmotleServices.eventForUpdate != {}){
+
+		if(CosmotleServices.eventForUpdate){
 			c.event = CosmotleServices.eventForUpdate;
 			c.showUpdate(c.event);
-
 		}
 
 		var _clearEvent = function(){
