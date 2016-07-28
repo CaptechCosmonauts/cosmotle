@@ -57,7 +57,7 @@
 	</div>
 	<div class="cat-title" ng-click="c.toggleStats('events')">Upcoming Duty Days</div>
 	<div ng-if="c.toggleUpcomingEvents">
-		<a class="u-pull-right" href="/#/calendar">Add An Event!</a>
+		<a class="u-pull-right" ng-click="c.routeToCalendar()">Add An Event!</a>
 		<table class="u-full-width">
 			<thead>
 		    <tr>
