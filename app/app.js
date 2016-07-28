@@ -76,7 +76,7 @@
 		}
 
   	c.unorganizedCalendar = calendarData[0].data;
-  	c.calendar = organizeCalendar(calendarData[0].data);
+  	c.calendar = CalendarUtils.organizeCalendar(calendarData[0].data);
 
     c.editEvent = function(event){
   		CosmotleServices.eventForUpdate = event;
@@ -146,7 +146,7 @@
 		};
 
 		c.updateEvent = function(){
-			CosmotleServices.putCosmotleCalendar(event);
+			CosmotleServices.putCosmotleCalendar(c.event);
 			_clearEvent();
 		};
 
@@ -378,8 +378,16 @@
 // 	}
 // }();
 
+var CalendarUtils = function(){
+	'use strict';
 
-function getCalendarDateRange(){
+	return {
+		organizeCalendar: organizeCalendar,
+		getCalendarDateRange: getCalendarDateRange,
+		calculateDateVariance: calculateDateVariance
+	};
+
+	function getCalendarDateRange(){
     var range = [];
 
     var dateToday = new Date();
@@ -387,30 +395,30 @@ function getCalendarDateRange(){
 
     var x = 0;
     for(var x = 0; x < range.length; x++){
-        arrayHold[x] = {"date":range[x],"name":" ","month":""};
+      arrayHold[x] = {"date":range[x],"name":" ","month":""};
     }
 
     while(variance.dateBackward != 0){
-        range[x] = {"date":dateToday.getDate() - variance.dateBackward,"name":" ","month":""};
-        variance.dateBackward--;
-        x++;
+      range[x] = {"date":dateToday.getDate() - variance.dateBackward,"name":" ","month":""};
+      variance.dateBackward--;
+      x++;
     }
 
     range[x] =  {"date":dateToday.getDate(),"name":" ","month":""};
     x++;
     var dateClimb = 1;
     while(variance.dateForward != 0){
-        range[x] ={"date":dateToday.getDate() + dateClimb,"name":" ","month":""};
-        dateClimb++;
-        variance.dateForward--;
-        x++
+      range[x] ={"date":dateToday.getDate() + dateClimb,"name":" ","month":""};
+      dateClimb++;
+      variance.dateForward--;
+      x++
     }
     return range;
-}
+	}
 
 
 
-function organizeCalendar(calendarArray){
+	function organizeCalendar(calendarArray){
 
     var range = getCalendarDateRange();
     var dateToday = new Date();
@@ -419,25 +427,25 @@ function organizeCalendar(calendarArray){
     var count = 0;
 
     for(var x = 0; x < calendarArray.length; x++){
-        var event = calendarArray[x];
-        if((event.month == (dateToday.getMonth() +1)) && ((dateToday.getDate() - variance.dateBackward) < event.date < (dateToday.getDate() + variance.dateForward))){
-            returned[count] = event;
-            count++;
-        }
+      var event = calendarArray[x];
+      if((event.month == (dateToday.getMonth() +1)) && ((dateToday.getDate() - variance.dateBackward) < event.date < (dateToday.getDate() + variance.dateForward))){
+          returned[count] = event;
+        count++;
+      }
     }
 
     for(var x = 0; x < range.length; x++){
-        for(var y = 0; y < returned.length; y++){
-            if((returned[y].date != undefined) && returned[y].date ==  range[x].date){
-                range[x] = returned[y];
-            }
+      for(var y = 0; y < returned.length; y++){
+        if((returned[y].date != undefined) && returned[y].date ==  range[x].date){
+          range[x] = returned[y];
         }
+      }
     }
 
     return range;
-}
+	}
 
-function calculateDateVariance(){
+	function calculateDateVariance(){
 
     var dateToday = new Date();
 
@@ -446,48 +454,48 @@ function calculateDateVariance(){
     var nextMonthToo = false;
 
     switch(dateToday.getDay()){
-        case 1:
-            dateForward = 4;
-            dateBackward= 0;
-            break;
-        case 2:
-            dateForward = 3;
-            dateBackward= 1;
-            break;
-        case 3:
-            dateForward = 2;
-            dateBackward= 2;
-            break;
-        case 4:
-            dateForward = 1;
-            dateBackward= 3;
-            break;
-        case 5:
-            dateForward = 0;
-            dateBackward= 4;
-            break;
-        case 6:
-            //Saturday
-            dateForward = 7;
-            dateBackward= 0;
-            break;
-        default:
-            //Sunday
-            dateForward = 6;
-            dateBackward= 0;
-            break;
+      case 1:
+        dateForward = 4;
+        dateBackward= 0;
+        break;
+      case 2:
+        dateForward = 3;
+        dateBackward= 1;
+        break;
+      case 3:
+        dateForward = 2;
+        dateBackward= 2;
+        break;
+      case 4:
+        dateForward = 1;
+        dateBackward= 3;
+        break;
+      case 5:
+        dateForward = 0;
+        dateBackward= 4;
+        break;
+      case 6:
+        //Saturday
+        dateForward = 7;
+        dateBackward= 0;
+        break;
+      default:
+        //Sunday
+        dateForward = 6;
+        dateBackward= 0;
+        break;
     }
-
 
     if(dateToday.getDate() + dateForward > 31){
-        nextMonthToo;
+      nextMonthToo;
     }
 
-    return returned = {
-        "dateForward": dateForward,
-        "dateBackward": dateBackward,
-        "nextMonthToo": nextMonthToo,
-        "dateToday": dateToday
-    }
+    return {
+      "dateForward": dateForward,
+      "dateBackward": dateBackward,
+      "nextMonthToo": nextMonthToo,
+      "dateToday": dateToday
+	  }
+	}
+}();
 
-}
