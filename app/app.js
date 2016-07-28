@@ -165,15 +165,9 @@
 		}
 
 		if(CosmotleServices.eventForUpdate !={}){
-			var eventForUpdate = CosmotleServices.eventForUpdate;
-			for(var x = 0; x < c.calendar.length; x++){
-				var event = c.calendar[x];
+			c.event = CosmotleServices.eventForUpdate;
+			c.showUpdate(c.event);
 
-				if((eventForUpdate.name == event.name) && (eventForUpdate.date == event.date) && (eventForUpdate.month == event.month)){
-					c.showUpdate(event._id.$oid, event.name, event.month, event.date);
-					break;
-				}
-			}
 		}
 
 		var _clearEvent = function(){
