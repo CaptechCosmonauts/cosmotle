@@ -46,4 +46,31 @@ this.addEventListener('activate', function(event){
 
 this.addEventListener('push', function(event){
   console.log('SW Push Event', event);
+
+  var title = 'Cosmotle Notification';  
+  var body = 'No one gets to eat Chipoltle today!';  
+  var icon = '/app/styles/cosmonauts.jpeg';  
+  var tag = 'cosmotle-notification-tag';
+
+  fetch('/calendar').then(function(response){
+    var dateObj = new Date(Date.now());
+    var day = dateObj.getDay();
+    var month = dateObj.getMonth() + 1;
+    response.json().then(function(data){
+      for(i = 0; i < data.length; i++){
+        if(month === Number(data[i].month) && day === Number(data[i].date)){
+          body = data[i].name + ' gets to eat Chipoltle today!';
+          this.registration.showNotification(title, {  
+            body: body,  
+            icon: icon,  
+            tag: tag  
+          });  
+        }
+      }
+    });
+
+  });
+  // event.waitUntil(
+
+  // );  
 })

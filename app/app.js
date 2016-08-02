@@ -48,6 +48,10 @@
 		
 	}])
 
+	app.run(['CosmotleServices', function(CosmotleServices){
+		CosmotleServices.initializeServiceWorker();
+	}]);
+
 	app.controller('WelcomeCtrl', ['CosmotleServices','$location', function(CosmotleServices, $location){
 		var w = this;
 
@@ -67,7 +71,7 @@
 
 	}]);
 
-	app.controller('CosmotleCtrl', ['cosmotleData', 'calendarData', '$location', 'CosmotleServices', function(cosmotleData, calendarData, $location, CosmotleServices){
+	app.controller('CosmotleCtrl', ['cosmotleData', 'calendarData', '$location', 'CosmotleServices','$http', function(cosmotleData, calendarData, $location, CosmotleServices, $http){
 		var c = this;
 
 		//send user to welcome screen if we don't know them
@@ -114,6 +118,9 @@
 			$location.path('/calendar');
 		}
 
+		c.testPush = function(){
+			$http.post('testpush');
+		}
 	}]);
 
 
@@ -241,7 +248,8 @@
 			postCosmotleCalendar: postCosmotleCalendar,
 			putCosmotleCalendar: putCosmotleCalendar,
 			deleteCosmotleCalendar: deleteCosmotleCalendar,
-			eventForUpdate: {}
+			eventForUpdate: {},
+			initializeServiceWorker: initializeServiceWorker
 		}
 
 		function getCosmotleStats(){
@@ -355,26 +363,55 @@
 			$http.delete('/calendar/' + event._id.$oid, event);
 		}
 
+		function initializeServiceWorker(){
+
+			if ('serviceWorker' in navigator) {
+				$http.get('/pushendpoints').then(_registerSW);
+			}
+
+			function _registerSW(cosmotleEndpoints){
+				navigator.serviceWorker.register('/serviceworker.js', { scope: '/' }).then(function(reg) {
+					console.log('REGISTERED SW:', reg);
+					reg.pushManager.subscribe({
+						userVisibleOnly: true
+					}).then(function(sub){
+						console.log('endpoint:', sub.endpoint);
+						var endpointObj = {
+							endpoint: sub.endpoint
+						};
+
+						if(cosmotleEndpoints.data.length > 0){
+							if(!_findEndPointMatch(cosmotleEndpoints.data, endpointObj.endpoint)){
+								$http.post('/pushendpoints', endpointObj);
+							}
+						}
+						else{
+							$http.post('/pushendpoints', endpointObj);
+						}
+						
+					});
+			  }).catch(function(error) {
+			    // registration failed
+			    console.log('Registration failed with ' + error);
+			  });
+			}
+
+			function _findEndPointMatch(cosmotleEndpoints, pushMangerEndpoint){
+				var matchFound = false;
+				
+				for(var i = 0; i < cosmotleEndpoints.length; i++){
+					if(cosmotleEndpoints[i].endpoint === pushMangerEndpoint){
+						matchFound = true;
+					}
+				}
+
+				return matchFound;
+			} 
+		}
+
 	}]);
 
 })();
-
-var initializeServiceWorker = function(){
-
-	if ('serviceWorker' in navigator) {
-	  navigator.serviceWorker.register('/serviceworker.js', { scope: '/' }).then(function(reg) {
-			console.log('REGISTERED SW:', reg);
-			reg.pushManager.subscribe({
-				userVisibleOnly: true
-			}).then(function(sub){
-				console.log('endpoint:', sub.endpoint);
-			});
-	  }).catch(function(error) {
-	    // registration failed
-	    console.log('Registration failed with ' + error);
-	  });
-	}
-}();
 
 var CalendarUtils = function(){
 	'use strict';
