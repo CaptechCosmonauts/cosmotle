@@ -1,4 +1,8 @@
 {
 	"name": "Cosmotle",
+	"display": "standalone",
+	"icons": [{"src": "app/syles/cosmonauts.jpeg",
+		"sizes": "48x48"}],
+	"start_url": "https://cosmotle.herokuapp.com",
 	"gcm_sender_id": "213465769134"
 }
