@@ -71,7 +71,7 @@
 		var c = this;
 
 		//send user to welcome screen if we don't know them
-		if(!CosmotleServices.isUserKnown){
+		if(!CosmotleServices.isUserKnown()){
 			$location.path('/');
 		}
 
