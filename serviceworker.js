@@ -54,7 +54,7 @@ this.addEventListener('push', function(event){
 
   fetch('/calendar').then(function(response){
     var dateObj = new Date(Date.now());
-    var day = dateObj.getDay();
+    var day = dateObj.getDate();
     var month = dateObj.getMonth() + 1;
     response.json().then(function(data){
       for(i = 0; i < data.length; i++){
